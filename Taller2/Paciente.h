@@ -16,8 +16,10 @@ private:
     int DiasHospitalizacion;
 
 public:
+    Paciente(std::string nombre, int edad, std::string id, std::string servicio, float temp, int presion, int dolor, std::string tipoDol, 
+    int trauma, int sintomas, int cirugia, int dias);
     std::string getId();
-    void setServicio();
+    void setServicio(std::string nuevoServicio);
     float getTemperatura();
     int getPresion();
     int getDolor();
@@ -26,5 +28,5 @@ public:
     int getSintomas();
     int getRequiereCirugia();
     int getDiasHosp();
-
+    ~Paciente();
 };
