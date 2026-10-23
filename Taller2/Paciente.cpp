@@ -1,11 +1,10 @@
-#pragma once
 #include "Paciente.h"
 using namespace std;
 
-Paciente::Paciente(std::string nombre, int edad, std::string id, std::string servicio, float temp, int presion, int dolor, std::string tipoDol, 
-    int trauma, int sintomas, int cirugia, int dias) : Persona(nombre, edad){
+Paciente::Paciente(std::string nombre, int edad, std::string id, float temp, int presion, int dolor, std::string tipoDol,
+    int trauma, int sintomas, int cirugia, int dias) : Persona(nombre, edad) {
         this->ID = id;
-        this->Servicio = servicio;
+        this->Servicio = "";
         this->Temperatura = temp;
         this->PresionArterial = presion;
         this->Dolor = dolor;
@@ -14,10 +13,14 @@ Paciente::Paciente(std::string nombre, int edad, std::string id, std::string ser
         this->SintomasNeurologicos = sintomas;
         this->RequiereCirugia = cirugia;
         this->DiasHospitalizacion = dias;
-    };
+}
 
 std::string Paciente::getId() {
     return this-> ID;
+}
+
+std::string Paciente::getServicio() {
+    return this->Servicio;
 }
 
 void Paciente::setServicio(std::string nuevoServicio) {
@@ -47,3 +50,5 @@ int Paciente::getRequiereCirugia() {
 int Paciente::getDiasHosp() {
     return this->DiasHospitalizacion;
 }
+
+Paciente::~Paciente() {}

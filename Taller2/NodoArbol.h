@@ -22,5 +22,5 @@ public:
     NodoArbol* getSi();
     NodoArbol* getNo();
     void setRamaSi(NodoArbol* nuevoNodo);
-    void setRamaNo(NodoArbol* nuevoNsodo);
+    void setRamaNo(NodoArbol* nuevoNodo);
 };

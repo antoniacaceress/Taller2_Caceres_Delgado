@@ -1,4 +1,5 @@
 #include "ArbolDecision.h"
+#include <sstream>
 
 ArbolDecision::ArbolDecision() {
     this->raiz = new NodoArbol("Edad", 14);
@@ -44,14 +45,19 @@ void ArbolDecision::vaciarArbol(NodoArbol* nodo) {
     }
 }
 
-std::string ArbolDecision::obtenerServicio(Paciente* p) {
+std::string ArbolDecision::obtenerServicio(Paciente* p, std::string& ruta) {
+    ruta = "";
     if (p == nullptr) {
-        return "Datos inválidos";
+        return "Datos invalidos";
     }
-    return this->buscarDepartamento(this->raiz, p);
+    return this->buscarDepartamento(this->raiz, p, ruta);
 }
 
-std::string ArbolDecision::buscarDepartamento(NodoArbol* nodo, Paciente* p) {
+std::string ArbolDecision::buscarDepartamento(NodoArbol* nodo, Paciente* p, std::string& ruta) {
+    if (nodo == nullptr) {
+        return "Datos invalidos";
+    }
+
     if (nodo->getPregunta() == "Hoja") {
         return nodo->getServicio();
     }
@@ -79,7 +85,7 @@ std::string ArbolDecision::buscarDepartamento(NodoArbol* nodo, Paciente* p) {
             verificador = true;
         }
     } else if (nodo->getPregunta() == "Temperatura") {
-        if (p->getTemperatura() > nodo->getValorNum()) {
+        if (p->getTemperatura() >= nodo->getValorNum()) {
             verificador = true;
         }
     } else if (nodo->getPregunta() == "Dolor") {
@@ -92,35 +98,88 @@ std::string ArbolDecision::buscarDepartamento(NodoArbol* nodo, Paciente* p) {
         }
     }
 
+    if (ruta != "") {
+        ruta += " -> ";
+    }
+    ruta += this->condicion(nodo, verificador);
+
     if (verificador) {
-        return this->buscarDepartamento(nodo->getSi(), p);
+        return this->buscarDepartamento(nodo->getSi(), p, ruta);
     } else {
-        return this->buscarDepartamento(nodo->getNo(), p);
+        return this->buscarDepartamento(nodo->getNo(), p, ruta);
     }
 
 }
 
-void ArbolDecision::verCaminos() {
+std::string ArbolDecision::operador(NodoArbol* nodo, bool cumple) {
+    std::string pregunta = nodo->getPregunta();
+    if (pregunta == "Edad") {
+        return cumple ? "<" : ">=";
+    }
+    if (pregunta == "Temperatura" || pregunta == "Dolor" || pregunta == "DiasHospitalizacion") {
+        return cumple ? ">=" : "<";
+    }
+    return cumple ? "==" : "!=";
+}
+
+std::string ArbolDecision::condicion(NodoArbol* nodo, bool cumple) {
+    std::ostringstream texto;
+    texto << nodo->getPregunta() << " " << this->operador(nodo, cumple) << " ";
+    if (nodo->getValorTexto() != "") {
+        texto << nodo->getValorTexto();
+    } else {
+        texto << nodo->getValorNum();
+    }
+    return texto.str();
+}
+
+void ArbolDecision::verPreorden() {
     this->mostrarPreorden(this->raiz, 0);
+}
+
+void ArbolDecision::verInorden() {
+    this->mostrarInorden(this->raiz, 0);
+}
+
+void ArbolDecision::verPostorden() {
+    this->mostrarPostorden(this->raiz, 0);
+}
+
+void ArbolDecision::mostrarNodo(NodoArbol* nodo, int nivel) {
+    for (int i = 0; i < nivel; i++) {
+        std::cout<< "  ";
+    }
+
+    if (nodo->getPregunta() == "Hoja") {
+        std::cout<< "=> " << nodo->getServicio() << "\n";
+    } else {
+        std::cout << "- " << this->condicion(nodo, true) << "?\n";
+    }
 }
 
 void ArbolDecision::mostrarPreorden(NodoArbol* nodo, int nivel) {
     if (nodo == nullptr) {
         return;
     }
-
-    for (int i = 0; i < nivel; i++) {
-        std::cout<< " ";
-    }
-
-    if (nodo->getPregunta() == "Hoja") {
-        std::cout<< "=> " << nodo->getServicio() << "\n";
-    } else {
-        std::cout << "- " << nodo->getPregunta() << " " << nodo->getValorNum() << nodo->getValorTexto() << "\n";
-        this->mostrarPreorden(nodo->getSi(), nivel + 1);
-        this->mostrarPreorden(nodo->getNo(), nivel + 1);
-    }
-
-
+    this->mostrarNodo(nodo, nivel);
+    this->mostrarPreorden(nodo->getSi(), nivel + 1);
+    this->mostrarPreorden(nodo->getNo(), nivel + 1);
 }
 
+void ArbolDecision::mostrarInorden(NodoArbol* nodo, int nivel) {
+    if (nodo == nullptr) {
+        return;
+    }
+    this->mostrarInorden(nodo->getSi(), nivel + 1);
+    this->mostrarNodo(nodo, nivel);
+    this->mostrarInorden(nodo->getNo(), nivel + 1);
+}
+
+void ArbolDecision::mostrarPostorden(NodoArbol* nodo, int nivel) {
+    if (nodo == nullptr) {
+        return;
+    }
+    this->mostrarPostorden(nodo->getSi(), nivel + 1);
+    this->mostrarPostorden(nodo->getNo(), nivel + 1);
+    this->mostrarNodo(nodo, nivel);
+}

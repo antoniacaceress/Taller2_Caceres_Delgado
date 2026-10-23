@@ -1,5 +1,4 @@
 #pragma once
-#include "Paciente.h"
 template <typename T>
 
 class Nodo {

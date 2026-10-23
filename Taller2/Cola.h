@@ -40,7 +40,7 @@ public:
 
     void pop() {
         if (isEmpty()) {
-            std::cout << "La fila está vacía";
+            std::cout << "La fila esta vacia" << std::endl;
             return;
         }
 

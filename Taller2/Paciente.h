@@ -1,6 +1,6 @@
 #pragma once
+#include <string>
 #include "Persona.h"
-using namespace std;
 
 class Paciente : public Persona {
 private:
@@ -16,9 +16,10 @@ private:
     int DiasHospitalizacion;
 
 public:
-    Paciente(std::string nombre, int edad, std::string id, std::string servicio, float temp, int presion, int dolor, std::string tipoDol, 
+    Paciente(std::string nombre, int edad, std::string id, float temp, int presion, int dolor, std::string tipoDol,
     int trauma, int sintomas, int cirugia, int dias);
     std::string getId();
+    std::string getServicio();
     void setServicio(std::string nuevoServicio);
     float getTemperatura();
     int getPresion();

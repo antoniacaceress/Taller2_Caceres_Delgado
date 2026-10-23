@@ -3,7 +3,7 @@
 NodoArbol::NodoArbol(std::string pregunta, float num, std::string valText) {
     this->pregunta = pregunta;
     this->valorNum = num;
-    this->valorTexto = "";
+    this->valorTexto = valText;
     this->servicio = "";
     this->si = nullptr;
     this->no = nullptr;
