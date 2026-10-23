@@ -8,6 +8,8 @@ include_directories(Taller2)
 configure_file(Prueba.txt Prueba.txt COPYONLY)
 
 add_executable(Taller2_Caceres_Delgado
+        Taller2/ArbolAVL.cpp
+        Taller2/ArbolAVL.h
         Taller2/ArbolDecision.cpp
         Taller2/ArbolDecision.h
         Taller2/Cola.h
@@ -16,6 +18,8 @@ add_executable(Taller2_Caceres_Delgado
         Taller2/ListaPrincipal.h
         Taller2/main.cpp
         Taller2/Nodo.h
+        Taller2/NodoAVL.cpp
+        Taller2/NodoAVL.h
         Taller2/NodoArbol.cpp
         Taller2/NodoArbol.h
         Taller2/NodoPorPaciente.h
