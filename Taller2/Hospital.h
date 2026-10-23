@@ -32,5 +32,8 @@ class Hospital {
         void atenderPacientes(int cantidad);
         void mostrarDepartamentos();
         void mostrarArbolDecision(int recorrido);
+        void mostrarServicios();
+        void mostrarAVL(int numero);
+        void eliminarPaciente(std::string id);
         void buscarPaciente(std::string texto);
 };

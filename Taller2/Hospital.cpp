@@ -39,8 +39,9 @@ Servicio* Hospital::buscarServicio(std::string nombre) {
 
 bool Hospital::existeId(std::string id) {
     int totalServicios = this->servicios.size();
+    std::string ruta;
     for (int i = 0; i < totalServicios; i++) {
-        if (this->servicios.get(i)->buscarPaciente(id) != nullptr) {
+        if (this->servicios.get(i)->getPacientes()->buscar(id, ruta) != nullptr) {
             return true;
         }
     }
@@ -304,10 +305,10 @@ void Hospital::atenderPacientes(int cantidad) {
         }
 
         p->setServicio(nombreServicio);
-        servicio->agregarPaciente(p);
+        servicio->getPacientes()->insertar(p);
 
         std::cout << "Servicio asignado: " << nombreServicio << std::endl;
-        std::cout << "Paciente insertado en " << nombreServicio << "." << std::endl;
+        std::cout << "Paciente insertado en el AVL de " << nombreServicio << "." << std::endl;
     }
 }
 
@@ -318,12 +319,59 @@ void Hospital::mostrarDepartamentos() {
         Servicio* servicio = this->servicios.get(i);
         std::cout << std::endl;
         std::cout << servicio->getNombreServicio() << std::endl;
-        if (servicio->cantidadPacientes() == 0) {
+        if (servicio->getPacientes()->isEmpty()) {
             std::cout << "Sin pacientes" << std::endl;
         } else {
-            servicio->mostrarPacientes();
+            std::cout << "Pacientes:" << std::endl;
+            servicio->getPacientes()->mostrarInorden();
         }
     }
+}
+
+void Hospital::mostrarServicios() {
+    int total = this->servicios.size();
+    for (int i = 0; i < total; i++) {
+        std::cout << (i + 1) << ". " << this->servicios.get(i)->getNombreServicio() << std::endl;
+    }
+}
+
+void Hospital::mostrarAVL(int numero) {
+    if (numero < 1 || numero > this->servicios.size()) {
+        std::cout << "Opcion invalida" << std::endl;
+        return;
+    }
+
+    Servicio* servicio = this->servicios.get(numero - 1);
+    ArbolAVL* avl = servicio->getPacientes();
+    std::cout << "=== AVL DE " << servicio->getNombreServicio() << " ===" << std::endl;
+    if (avl->isEmpty()) {
+        std::cout << "Sin pacientes" << std::endl;
+        return;
+    }
+
+    std::cout << std::endl << "Inorden:" << std::endl;
+    avl->mostrarInorden();
+    std::cout << std::endl << "Preorden:" << std::endl;
+    avl->mostrarPreorden();
+    std::cout << std::endl << "Postorden:" << std::endl;
+    avl->mostrarPostorden();
+    std::cout << std::endl << "Altura del arbol: " << avl->getAltura() << std::endl;
+    std::cout << std::endl << "Factor de balance:" << std::endl;
+    avl->mostrarFactoresBalance();
+}
+
+void Hospital::eliminarPaciente(std::string id) {
+    int totalServicios = this->servicios.size();
+    std::string ruta;
+    for (int i = 0; i < totalServicios; i++) {
+        Servicio* servicio = this->servicios.get(i);
+        if (servicio->getPacientes()->buscar(id, ruta) != nullptr) {
+            servicio->getPacientes()->eliminar(id);
+            std::cout << "Paciente " << id << " eliminado del AVL de " << servicio->getNombreServicio() << "." << std::endl;
+            return;
+        }
+    }
+    std::cout << "No se encontro ningun paciente atendido con el ID " << id << std::endl;
 }
 
 void Hospital::mostrarArbolDecision(int recorrido) {
@@ -342,16 +390,30 @@ void Hospital::mostrarArbolDecision(int recorrido) {
 }
 
 void Hospital::buscarPaciente(std::string texto) {
+    std::cout << "Buscando en AVL..." << std::endl;
+    std::cout << std::endl;
+
     int totalServicios = this->servicios.size();
     for (int i = 0; i < totalServicios; i++) {
         Servicio* servicio = this->servicios.get(i);
-        Paciente* p = servicio->buscarPaciente(texto);
+        ArbolAVL* avl = servicio->getPacientes();
+        std::string ruta;
+        Paciente* p = avl->buscar(texto, ruta);
+        if (p == nullptr) {
+            p = avl->buscarPorNombre(texto);
+            if (p != nullptr) {
+                avl->buscar(p->getId(), ruta);
+            }
+        }
         if (p != nullptr) {
             std::cout << "Paciente encontrado:" << std::endl;
             std::cout << "-------" << std::endl;
             this->mostrarDatos(p);
             std::cout << "Departamento: " << servicio->getNombreServicio() << std::endl;
             std::cout << "-------" << std::endl;
+            std::cout << std::endl;
+            std::cout << "Ruta de busqueda:" << std::endl;
+            std::cout << ruta << std::endl;
             return;
         }
     }

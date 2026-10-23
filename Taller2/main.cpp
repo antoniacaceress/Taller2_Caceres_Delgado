@@ -23,6 +23,8 @@ void menuPrincipal(Hospital& hospital) {
         cout << "3. Buscar paciente" << endl;
         cout << "4. Salir" << endl;
         cout << "5. Ver arbol de decision" << endl;
+        cout << "6. Ver AVL de un departamento" << endl;
+        cout << "7. Eliminar paciente" << endl;
         cout << "Seleccionar opcion: ";
         opcion = leerNumero();
         cout << endl;
@@ -57,6 +59,20 @@ void menuPrincipal(Hospital& hospital) {
             int recorrido = leerNumero();
             cout << endl;
             hospital.mostrarArbolDecision(recorrido);
+        } else if (opcion == 6) {
+            hospital.mostrarServicios();
+            cout << "Seleccionar departamento: ";
+            int numero = leerNumero();
+            cout << endl;
+            hospital.mostrarAVL(numero);
+        } else if (opcion == 7) {
+            cout << "=== ELIMINAR PACIENTE ===" << endl;
+            cout << endl;
+            cout << "Indique el ID del paciente: ";
+            string id;
+            cin >> id;
+            cout << endl;
+            hospital.eliminarPaciente(id);
         } else {
             cout << "Opcion invalida" << endl;
         }
