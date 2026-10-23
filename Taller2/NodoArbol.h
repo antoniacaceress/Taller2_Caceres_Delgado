@@ -11,7 +11,7 @@ private:
     NodoArbol* no;
 
 public:
-    NodoArbol(std::string pregunta, float num, std::string valText);
+    NodoArbol(std::string pregunta, float num, std::string valText = "");
     NodoArbol(std::string servicio);
     ~NodoArbol();
 
